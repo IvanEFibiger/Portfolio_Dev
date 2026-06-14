@@ -1,5 +1,13 @@
 import { plainToInstance } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MinLength,
+  validateSync,
+} from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -37,6 +45,7 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
+  @MinLength(32, { message: 'JWT_SECRET debe tener al menos 32 caracteres' })
   JWT_SECRET!: string;
 
   @IsString()
@@ -75,6 +84,19 @@ export function validate(config: Record<string, unknown>) {
 
   if (errors.length > 0) {
     throw new Error(`Environment validation failed:\n${errors.toString()}`);
+  }
+
+  const INSECURE_DEFAULTS = [
+    'cambiar-este-secreto-en-produccion',
+    'dev-jwt-secret-cambiar-en-produccion-abc123',
+  ];
+  if (
+    validatedConfig.NODE_ENV === Environment.Production &&
+    INSECURE_DEFAULTS.includes(validatedConfig.JWT_SECRET)
+  ) {
+    throw new Error(
+      'JWT_SECRET tiene un valor por defecto inseguro: definí uno real en producción.',
+    );
   }
 
   return validatedConfig;

@@ -1,0 +1,20 @@
+# Override de producción. Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+# Requiere un archivo .env en la raíz con los secretos reales (ver
+# .env.production.example).
+services:
+  api:
+    environment:
+      NODE_ENV: production
+      SWAGGER_ENABLED: 'false'
+      JWT_SECRET: ${JWT_SECRET:?Definí JWT_SECRET (>=32 chars) en .env}
+      DB_PASSWORD: ${DB_PASSWORD:?Definí DB_PASSWORD en .env}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Definí ADMIN_PASSWORD en .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:?Definí CORS_ORIGIN con tu dominio real}
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Definí DB_PASSWORD en .env}
+  web:
+    environment:
+      NODE_ENV: production
+      NG_ALLOWED_HOSTS: ${NG_ALLOWED_HOSTS:?Definí NG_ALLOWED_HOSTS con tu dominio}
