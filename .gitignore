@@ -47,5 +47,8 @@ postgres_data/
 tmp/
 temp/
 
+# Artefactos de agentes / herramientas
+.playwright-mcp/
+
 # Material personal (no es código del proyecto)
 certificaciones/
