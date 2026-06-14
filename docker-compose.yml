@@ -1,0 +1,115 @@
+# ============================================
+# Portfolio Ivan Fibiger - Docker Compose
+# ============================================
+#
+# Levantar todo (build + DB + migraciones + seeds + API + web SSR):
+#   docker compose up -d --build
+#
+# Bajar todo:            docker compose down
+# Bajar + borrar la DB:  docker compose down -v
+# Logs en vivo:          docker compose logs -f
+#
+# URLs locales (puertos propios del proyecto, no chocan con 4200/3000/5432):
+#   Web:        http://localhost:4650
+#   API:        http://localhost:4651
+#   PostgreSQL: localhost:54650
+#
+# Para cambiar un puerto, crear un .env en la raiz con la variable
+# correspondiente (WEB_HOST_PORT / API_HOST_PORT / POSTGRES_HOST_PORT).
+
+name: portfolio-ivan
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: portfolio-ivan-postgres
+    restart: unless-stopped
+    ports:
+      - '${POSTGRES_HOST_PORT:-54650}:5432'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-portfolio}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-portfolio_dev_password}
+      POSTGRES_DB: ${DB_DATABASE:-portfolio_ivan}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - portfolio-net
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USERNAME:-portfolio} -d ${DB_DATABASE:-portfolio_ivan}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: portfolio-ivan-api
+    restart: unless-stopped
+    ports:
+      - '${API_HOST_PORT:-4651}:3000'
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-portfolio}
+      DB_PASSWORD: ${DB_PASSWORD:-portfolio_dev_password}
+      DB_DATABASE: ${DB_DATABASE:-portfolio_ivan}
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-cambiar-en-produccion-abc123}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-1h}
+      # Origenes permitidos: la web dockerizada y los dev servers locales (ng serve).
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:4650,http://localhost:4200}
+      THROTTLE_TTL: ${THROTTLE_TTL:-60}
+      THROTTLE_LIMIT: ${THROTTLE_LIMIT:-10}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-true}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@portfolio.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ADMIN_DISPLAY_NAME: ${ADMIN_DISPLAY_NAME:-Ivan Fibiger}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - portfolio-net
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:3000/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: portfolio-ivan-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      # URL interna del backend para el proxy /api y el fetch durante SSR.
+      API_PROXY_TARGET: http://api:3000
+      # Hosts permitidos por el motor SSR. Sin esto, el render cae a CSR.
+      # En produccion agregar el dominio real (ej: ivanfibiger.dev).
+      NG_ALLOWED_HOSTS: ${NG_ALLOWED_HOSTS:-localhost}
+    ports:
+      - '${WEB_HOST_PORT:-4650}:4000'
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - portfolio-net
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -qO- http://localhost:4000/ >/dev/null 2>&1 || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  portfolio-net:
+    name: portfolio-ivan-net
+
+volumes:
+  postgres_data:
+    name: portfolio-ivan-pgdata
