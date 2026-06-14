@@ -49,6 +49,10 @@ temp/
 
 # Artefactos de agentes / herramientas
 .playwright-mcp/
+.claude/
+
+# Documentación interna (no se publica en el repo)
+docs/
 
 # Material personal (no es código del proyecto)
 certificaciones/
