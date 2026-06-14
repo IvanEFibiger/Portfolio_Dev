@@ -17,6 +17,27 @@ export class ArticlesService {
     return this.http.get<ArticleSummary[]>(`${environment.apiBaseUrl}/public/articles`);
   }
 
+  searchArticles(q: string): Observable<ArticleSummary[]> {
+    if (environment.useMocks) {
+      const term = q.trim().toLowerCase();
+      const articles = MOCK_ARTICLES.filter((article) => article.status === 'published');
+      if (!term) return of(articles);
+
+      return of(
+        articles.filter((article) =>
+          [article.title, article.excerpt, article.category ?? '', ...(article.tags ?? [])]
+            .join(' ')
+            .toLowerCase()
+            .includes(term),
+        ),
+      );
+    }
+
+    return this.http.get<ArticleSummary[]>(`${environment.apiBaseUrl}/public/articles`, {
+      params: q ? { q } : {},
+    });
+  }
+
   getLatestArticles(limit = 3): Observable<ArticleSummary[]> {
     if (environment.useMocks) {
       return of(

@@ -1,6 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { catchError, map, of, startWith } from 'rxjs';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { ArticlesService } from '../../../core/services/articles.service';
 import { ArticleCardComponent } from '../../../shared/components/article-card.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header.component';
@@ -35,6 +44,18 @@ type ArticlesVm =
     />
     <section class="section section--alt">
       <div class="container">
+        <div class="form-field route-reveal">
+          <label class="form-label" for="articles-search">Buscar en la bitácora</label>
+          <input
+            id="articles-search"
+            class="form-input"
+            type="search"
+            [value]="searchTerm()"
+            placeholder="Buscar por título, categoría o tag"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
         @if (vm$ | async; as vm) {
           @switch (vm.state) {
             @case ('loading') {
@@ -65,16 +86,31 @@ type ArticlesVm =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArticlesComponent {
-  readonly vm$ = inject(ArticlesService)
-    .getArticles()
-    .pipe(
-      map((articles): ArticlesVm => ({ state: 'ready', articles })),
-      startWith({ state: 'loading' } as ArticlesVm),
-      catchError(() =>
-        of({
-          state: 'error',
-          message: 'Reintenta mas tarde o revisa los proyectos mientras tanto.',
-        } as ArticlesVm),
+  private readonly articlesService = inject(ArticlesService);
+  private readonly searchTerms = new Subject<string>();
+
+  readonly searchTerm = signal('');
+
+  readonly vm$ = this.searchTerms.pipe(
+    startWith(''),
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((q) =>
+      this.articlesService.searchArticles(q).pipe(
+        map((articles): ArticlesVm => ({ state: 'ready', articles })),
+        startWith({ state: 'loading' } as ArticlesVm),
+        catchError(() =>
+          of({
+            state: 'error',
+            message: 'Reintenta mas tarde o revisa los proyectos mientras tanto.',
+          } as ArticlesVm),
+        ),
       ),
-    );
+    ),
+  );
+
+  onSearch(q: string): void {
+    this.searchTerm.set(q);
+    this.searchTerms.next(q);
+  }
 }

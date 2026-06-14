@@ -17,6 +17,27 @@ export class ProjectsService {
     return this.http.get<ProjectSummary[]>(`${environment.apiBaseUrl}/public/projects`);
   }
 
+  searchProjects(q: string): Observable<ProjectSummary[]> {
+    if (environment.useMocks) {
+      const term = q.trim().toLowerCase();
+      const projects = MOCK_PROJECTS.sort((a, b) => a.sortOrder - b.sortOrder);
+      if (!term) return of(projects);
+
+      return of(
+        projects.filter((project) =>
+          [project.title, project.summary, project.type ?? '', ...(project.stack ?? [])]
+            .join(' ')
+            .toLowerCase()
+            .includes(term),
+        ),
+      );
+    }
+
+    return this.http.get<ProjectSummary[]>(`${environment.apiBaseUrl}/public/projects`, {
+      params: q ? { q } : {},
+    });
+  }
+
   getFeaturedProjects(limit = 5): Observable<ProjectSummary[]> {
     if (environment.useMocks) {
       return of(

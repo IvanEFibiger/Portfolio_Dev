@@ -1,7 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { catchError, of, tap } from 'rxjs';
 import { AdminProjectsService } from '../../../core/services/admin-projects.service';
+import { ProjectSummary } from '../../../shared/models/project.model';
 
 @Component({
   selector: 'app-admin-projects',
@@ -18,11 +20,32 @@ import { AdminProjectsService } from '../../../core/services/admin-projects.serv
     @if (error()) {
       <p class="form-error">{{ error() }}</p>
     }
-    @if (projects$ | async; as projects) {
+    @if (projects$ | async) {
       <div class="admin-table-wrap">
         <div class="admin-table-header">
-          Todos los proyectos
+          <span>Todos los proyectos</span>
           <a routerLink="/admin/projects">Ver todos →</a>
+        </div>
+        <div
+          style="display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-divider); flex-wrap: wrap;"
+        >
+          <input
+            type="text"
+            placeholder="Buscar por título o slug..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+            style="flex: 1 1 220px; min-width: 180px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-md); padding: 8px 12px; font-family: var(--font-sans); font-size: 13px; color: var(--text); outline: none;"
+          />
+          <select
+            [value]="statusFilter()"
+            (change)="statusFilter.set($any($event.target).value)"
+            style="background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-md); padding: 8px 12px; font-family: var(--font-sans); font-size: 13px; color: var(--text); outline: none; min-width: 140px;"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="draft">Borrador</option>
+            <option value="published">Publicado</option>
+            <option value="archived">Archivado</option>
+          </select>
         </div>
         <table class="admin-table">
           <thead>
@@ -35,7 +58,7 @@ import { AdminProjectsService } from '../../../core/services/admin-projects.serv
             </tr>
           </thead>
           <tbody>
-            @for (project of projects; track project.id) {
+            @for (project of filteredProjects(); track project.id) {
               <tr>
                 <td class="td-title">{{ project.title }}</td>
                 <td>
@@ -84,7 +107,28 @@ import { AdminProjectsService } from '../../../core/services/admin-projects.serv
 })
 export class AdminProjectsComponent {
   private readonly service = inject(AdminProjectsService);
-  readonly projects$ = this.service.getProjects();
+  readonly projects = signal<ProjectSummary[]>([]);
+  readonly searchQuery = signal('');
+  readonly statusFilter = signal('all');
+  readonly projects$ = this.service.getProjects().pipe(
+    tap((data) => this.projects.set(data)),
+    catchError((err) => {
+      this.error.set(err.error?.message ?? 'Error al cargar proyectos.');
+      return of([]);
+    }),
+  );
+  readonly filteredProjects = computed(() => {
+    const query = this.searchQuery().trim().toLowerCase();
+    const status = this.statusFilter();
+    return this.projects().filter((project) => {
+      const matchesStatus = status === 'all' || project.status === status;
+      const matchesQuery =
+        !query ||
+        project.title.toLowerCase().includes(query) ||
+        project.slug.toLowerCase().includes(query);
+      return matchesStatus && matchesQuery;
+    });
+  });
   readonly error = signal('');
 
   confirmDelete(id: string): void {

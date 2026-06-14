@@ -1,6 +1,15 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { catchError, map, of, startWith } from 'rxjs';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { ProjectsService } from '../../../core/services/projects.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header.component';
 import { ProjectCardComponent } from '../../../shared/components/project-card.component';
@@ -35,6 +44,18 @@ type ProjectsVm =
     />
     <section class="section">
       <div class="container">
+        <div class="form-field route-reveal">
+          <label class="form-label" for="projects-search">Buscar proyectos</label>
+          <input
+            id="projects-search"
+            class="form-input"
+            type="search"
+            [value]="searchTerm()"
+            placeholder="Buscar por título, stack o tipo"
+            (input)="onSearch($any($event.target).value)"
+          />
+        </div>
+
         @if (vm$ | async; as vm) {
           @switch (vm.state) {
             @case ('loading') {
@@ -65,16 +86,31 @@ type ProjectsVm =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsComponent {
-  readonly vm$ = inject(ProjectsService)
-    .getProjects()
-    .pipe(
-      map((projects): ProjectsVm => ({ state: 'ready', projects })),
-      startWith({ state: 'loading' } as ProjectsVm),
-      catchError(() =>
-        of({
-          state: 'error',
-          message: 'Reintenta en unos minutos o escribime por contacto.',
-        } as ProjectsVm),
+  private readonly projectsService = inject(ProjectsService);
+  private readonly searchTerms = new Subject<string>();
+
+  readonly searchTerm = signal('');
+
+  readonly vm$ = this.searchTerms.pipe(
+    startWith(''),
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((q) =>
+      this.projectsService.searchProjects(q).pipe(
+        map((projects): ProjectsVm => ({ state: 'ready', projects })),
+        startWith({ state: 'loading' } as ProjectsVm),
+        catchError(() =>
+          of({
+            state: 'error',
+            message: 'Reintenta en unos minutos o escribime por contacto.',
+          } as ProjectsVm),
+        ),
       ),
-    );
+    ),
+  );
+
+  onSearch(q: string): void {
+    this.searchTerm.set(q);
+    this.searchTerms.next(q);
+  }
 }

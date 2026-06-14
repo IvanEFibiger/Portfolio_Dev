@@ -1,7 +1,9 @@
 import { AsyncPipe, DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { catchError, of, tap } from 'rxjs';
 import { AdminArticlesService } from '../../../core/services/admin-articles.service';
+import { ArticleSummary } from '../../../shared/models/article.model';
 
 @Component({
   selector: 'app-admin-articles',
@@ -18,11 +20,32 @@ import { AdminArticlesService } from '../../../core/services/admin-articles.serv
     @if (error()) {
       <p class="form-error">{{ error() }}</p>
     }
-    @if (articles$ | async; as articles) {
+    @if (articles$ | async) {
       <div class="admin-table-wrap">
         <div class="admin-table-header">
-          Todos los artículos
+          <span>Todos los artículos</span>
           <a routerLink="/admin/articles">Ver todos →</a>
+        </div>
+        <div
+          style="display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-divider); flex-wrap: wrap;"
+        >
+          <input
+            type="text"
+            placeholder="Buscar por título o slug..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+            style="flex: 1 1 220px; min-width: 180px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-md); padding: 8px 12px; font-family: var(--font-sans); font-size: 13px; color: var(--text); outline: none;"
+          />
+          <select
+            [value]="statusFilter()"
+            (change)="statusFilter.set($any($event.target).value)"
+            style="background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-md); padding: 8px 12px; font-family: var(--font-sans); font-size: 13px; color: var(--text); outline: none; min-width: 140px;"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="draft">Borrador</option>
+            <option value="published">Publicado</option>
+            <option value="archived">Archivado</option>
+          </select>
         </div>
         <table class="admin-table">
           <thead>
@@ -35,7 +58,7 @@ import { AdminArticlesService } from '../../../core/services/admin-articles.serv
             </tr>
           </thead>
           <tbody>
-            @for (article of articles; track article.id) {
+            @for (article of filteredArticles(); track article.id) {
               <tr>
                 <td class="td-title">{{ article.title }}</td>
                 <td>
@@ -101,7 +124,28 @@ import { AdminArticlesService } from '../../../core/services/admin-articles.serv
 })
 export class AdminArticlesComponent {
   private readonly service = inject(AdminArticlesService);
-  readonly articles$ = this.service.getArticles();
+  readonly articles = signal<ArticleSummary[]>([]);
+  readonly searchQuery = signal('');
+  readonly statusFilter = signal('all');
+  readonly articles$ = this.service.getArticles().pipe(
+    tap((data) => this.articles.set(data)),
+    catchError((err) => {
+      this.error.set(err.error?.message ?? 'Error al cargar artículos.');
+      return of([]);
+    }),
+  );
+  readonly filteredArticles = computed(() => {
+    const query = this.searchQuery().trim().toLowerCase();
+    const status = this.statusFilter();
+    return this.articles().filter((article) => {
+      const matchesStatus = status === 'all' || article.status === status;
+      const matchesQuery =
+        !query ||
+        article.title.toLowerCase().includes(query) ||
+        article.slug.toLowerCase().includes(query);
+      return matchesStatus && matchesQuery;
+    });
+  });
   readonly error = signal('');
 
   publish(id: string): void {
