@@ -1,6 +1,8 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
+import compression from 'compression';
 import express from 'express';
+import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -13,6 +15,10 @@ const indexHtml = join(serverDistFolder, 'index.server.html');
 const apiTarget = process.env['API_PROXY_TARGET'] ?? 'http://localhost:3000';
 
 const app = express();
+app.use(compression());
+// CSP desactivado: el HTML hidratado de Angular usa estilos/scripts inline y
+// una CSP estricta lo rompería. El resto de headers de helmet sí aplican.
+app.use(helmet({ contentSecurityPolicy: false }));
 // `NG_ALLOWED_HOSTS` (env) tiene precedencia; este fallback evita que el
 // render caiga silenciosamente a CSR al ejecutar el server localmente sin env.
 const commonEngine = new CommonEngine({ allowedHosts: ['localhost'] });
@@ -57,7 +63,7 @@ app.get(
 /**
  * Handle all other requests by rendering the Angular application.
  */
-app.get('**', (req, res, next) => {
+app.get('**', (req, res) => {
   const { protocol, originalUrl, baseUrl, headers } = req;
 
   commonEngine
@@ -69,7 +75,10 @@ app.get('**', (req, res, next) => {
       providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
     })
     .then((html) => res.send(html))
-    .catch((err) => next(err));
+    .catch((err) => {
+      console.error('SSR render error:', err);
+      res.status(500).send('Internal Server Error');
+    });
 });
 
 /**
