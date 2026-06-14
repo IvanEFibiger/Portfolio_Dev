@@ -12,8 +12,16 @@ export class GetPublicArticlesUseCase {
     private readonly articleRepository: ArticleRepositoryPort,
   ) {}
 
-  async execute(): Promise<Article[]> {
-    return this.articleRepository.findAllPublished();
+  async execute(q?: string): Promise<Article[]> {
+    const articles = await this.articleRepository.findAllPublished();
+    if (!q || !q.trim()) return articles;
+    const term = q.trim().toLowerCase();
+    return articles.filter((a) =>
+      [a.title, a.excerpt, a.category ?? '', ...(a.tags ?? [])]
+        .join(' ')
+        .toLowerCase()
+        .includes(term),
+    );
   }
 }
 

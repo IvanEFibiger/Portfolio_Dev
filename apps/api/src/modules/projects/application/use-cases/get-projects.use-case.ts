@@ -12,8 +12,13 @@ export class GetPublicProjectsUseCase {
     private readonly projectRepository: ProjectRepositoryPort,
   ) {}
 
-  async execute(): Promise<Project[]> {
-    return this.projectRepository.findAllPublished();
+  async execute(q?: string): Promise<Project[]> {
+    const projects = await this.projectRepository.findAllPublished();
+    if (!q || !q.trim()) return projects;
+    const term = q.trim().toLowerCase();
+    return projects.filter((p) =>
+      [p.title, p.summary, p.type ?? '', ...(p.stack ?? [])].join(' ').toLowerCase().includes(term),
+    );
   }
 }
 

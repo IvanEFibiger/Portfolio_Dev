@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 import {
@@ -17,8 +17,8 @@ export class PublicArticlesController {
 
   @Get()
   @ApiOperation({ summary: 'Listar artículos publicados' })
-  async findAll() {
-    const articles = await this.getPublicArticles.execute();
+  async findAll(@Query('q') q?: string) {
+    const articles = await this.getPublicArticles.execute(q);
     return articles.map((a) => ({
       id: a.id,
       title: a.title,
