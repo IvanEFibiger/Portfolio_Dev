@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { LoggerModule } from 'nestjs-pino';
 import configuration from './config/configuration';
 import { validate } from './config/env.schema';
 import { getTypeOrmConfig } from './infrastructure/database/typeorm.config';
@@ -20,8 +21,21 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 
+const usePrettyLogs =
+  process.env.NODE_ENV !== 'production' && process.env.npm_lifecycle_event === 'start:dev';
+
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: usePrettyLogs
+          ? { target: 'pino-pretty', options: { singleLine: true } }
+          : undefined,
+        autoLogging: false,
+        redact: ['req.headers.authorization', 'req.headers.cookie'],
+      },
+    }),
+
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '../../.env'],

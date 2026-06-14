@@ -1,14 +1,16 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, Logger } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { Logger } from 'nestjs-pino';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.useLogger(app.get(Logger));
   const configService = app.get(ConfigService);
-  const logger = new Logger('Bootstrap');
+  const logger = app.get(Logger);
   const corsOrigins = configService.get<string[]>('cors.origins') ?? [];
 
   app.use(
@@ -57,12 +59,12 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api/docs', app, document);
-    logger.log('Swagger habilitado en /api/docs');
+    logger.log('Swagger habilitado en /api/docs', 'Bootstrap');
   }
 
   const port = configService.get<number>('port') ?? 3000;
   await app.listen(port);
-  logger.log(`API corriendo en puerto ${port}`);
+  logger.log(`API corriendo en puerto ${port}`, 'Bootstrap');
 }
 
 bootstrap();
