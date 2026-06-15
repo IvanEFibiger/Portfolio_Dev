@@ -153,12 +153,12 @@ Servicios expuestos por defecto:
 
 El contenedor `api` espera a PostgreSQL, corre migraciones/seeds y arranca NestJS. El contenedor `web` sirve Angular SSR en Node y proxya `/api` hacia el backend interno.
 
-Credenciales admin de desarrollo:
-
-```text
-Email: admin@portfolio.com
-Password: admin123
-```
+El usuario admin lo crea el seed a partir de las variables `ADMIN_EMAIL` y
+`ADMIN_PASSWORD`. En local, el `docker-compose.yml` trae un default solo para
+desarrollo (`admin@portfolio.com` / contraseña de ejemplo); cambialo definiendo
+esas variables en un `.env`. En producción son **obligatorias**: el
+`docker-compose.prod.yml` no arranca sin `ADMIN_PASSWORD` y no existe ningún
+valor por defecto.
 
 Para apagar:
 
