@@ -91,13 +91,13 @@ import { PageHeaderComponent } from '../../../shared/components/page-header.comp
           </form>
 
           <aside class="contact-aside">
-            <div class="contact-aside-title">Tipo de conversaciones que tienen sentido</div>
+            <div class="contact-aside-title">Escribime si necesitás…</div>
             <ul class="contact-aside-list">
-              <li>Arquitectura inicial de un sistema.</li>
-              <li>Integración entre procesos y APIs.</li>
-              <li>Paneles administrativos y gestión interna.</li>
-              <li>Seguridad aplicada desde el diseño.</li>
-              <li>Documentación y orden técnico para evolucionar.</li>
+              <li>Pensar la arquitectura inicial de un sistema.</li>
+              <li>Integrar procesos y APIs entre sistemas.</li>
+              <li>Un panel administrativo o de gestión interna.</li>
+              <li>Sumar seguridad desde el diseño, no al final.</li>
+              <li>Poner orden y documentación para poder evolucionar.</li>
             </ul>
           </aside>
         </div>
