@@ -31,6 +31,7 @@ export interface AnalyticsSummaryFilters {
 export interface AnalyticsEventRepositoryPort {
   create(data: CreateAnalyticsEventData): Promise<AnalyticsEvent>;
   getSummary(filters: AnalyticsSummaryFilters): Promise<AnalyticsSummary>;
+  deleteOlderThan(date: Date): Promise<number>;
 }
 
 export const ANALYTICS_EVENT_REPOSITORY = Symbol('ANALYTICS_EVENT_REPOSITORY');

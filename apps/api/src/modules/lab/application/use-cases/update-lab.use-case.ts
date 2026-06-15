@@ -23,6 +23,7 @@ export class UpdateLabUseCase {
     if (dto.stack !== undefined) lab.stack = dto.stack;
     if (dto.learning !== undefined) lab.learning = dto.learning;
     if (dto.sortOrder !== undefined) lab.sortOrder = dto.sortOrder;
+    if (dto.published !== undefined) lab.published = dto.published;
 
     return this.labRepository.save(lab);
   }

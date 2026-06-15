@@ -11,23 +11,25 @@ export class LabItem {
     public stack: string[],
     public learning: string,
     public sortOrder: number,
+    public published: boolean,
     public createdAt: Date,
     public updatedAt: Date,
   ) {}
 
   publish(): void {
-    this.status = 'Documentado';
+    this.published = true;
   }
 
   unpublish(): void {
-    this.status = 'Explorando';
+    this.published = false;
   }
 
   archive(): void {
     this.status = 'Archivado';
+    this.published = false;
   }
 
   isPublished(): boolean {
-    return this.status !== 'Archivado';
+    return this.published;
   }
 }

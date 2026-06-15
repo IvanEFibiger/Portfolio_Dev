@@ -13,4 +13,5 @@ export interface SharedLabItem {
   stack: string[];
   learning: string;
   sortOrder: number;
+  published: boolean;
 }

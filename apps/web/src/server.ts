@@ -1,9 +1,11 @@
 import { APP_BASE_HREF } from '@angular/common';
+import { CSP_NONCE } from '@angular/core';
 import { CommonEngine, isMainModule } from '@angular/ssr/node';
 import compression from 'compression';
 import express from 'express';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import { randomBytes } from 'node:crypto';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import bootstrap from './main.server';
@@ -13,6 +15,10 @@ const browserDistFolder = resolve(serverDistFolder, '../browser');
 const indexHtml = join(serverDistFolder, 'index.server.html');
 
 const apiTarget = process.env['API_PROXY_TARGET'] ?? 'http://localhost:3000';
+const rawSsrCacheTtl = Number(process.env['SSR_CACHE_TTL_MS'] ?? 60000);
+const SSR_CACHE_TTL_MS =
+  Number.isFinite(rawSsrCacheTtl) && rawSsrCacheTtl > 0 ? rawSsrCacheTtl : 0;
+const SSR_CACHE_MAX_ENTRIES = 200;
 
 const app = express();
 app.use(compression());
@@ -61,10 +67,133 @@ app.get(
 );
 
 /**
+ * Caché en memoria del HTML renderizado por SSR para rutas públicas.
+ * La clave es el path normalizado (req.originalUrl). Se limita el tamaño
+ * del Map para evitar fugas de memoria a largo plazo.
+ */
+interface SsrCacheEntry {
+  html: string;
+  nonce: string;
+  expires: number;
+}
+
+const ssrCache = new Map<string, SsrCacheEntry>();
+
+function isAdminRoute(url: string): boolean {
+  return url.startsWith('/admin');
+}
+
+function hasSessionIndicators(req: express.Request): boolean {
+  return Boolean(req.headers.authorization ?? req.headers.cookie);
+}
+
+function isCacheableRequest(req: express.Request): boolean {
+  if (req.method !== 'GET') return false;
+  if (SSR_CACHE_TTL_MS <= 0) return false;
+  if (isAdminRoute(req.originalUrl)) return false;
+  if (hasSessionIndicators(req)) return false;
+  return true;
+}
+
+function cleanupExpiredCache(): void {
+  const now = Date.now();
+  for (const [key, entry] of ssrCache) {
+    if (entry.expires <= now) {
+      ssrCache.delete(key);
+    }
+  }
+}
+
+function enforceCacheLimit(): void {
+  if (ssrCache.size <= SSR_CACHE_MAX_ENTRIES) return;
+  cleanupExpiredCache();
+  while (ssrCache.size > SSR_CACHE_MAX_ENTRIES) {
+    const oldestKey = ssrCache.keys().next().value as string | undefined;
+    if (oldestKey) {
+      ssrCache.delete(oldestKey);
+    }
+  }
+}
+
+function createCspNonce(): string {
+  return randomBytes(16).toString('base64');
+}
+
+function createContentSecurityPolicy(nonce: string): string {
+  return [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}'`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https:",
+    "font-src 'self'",
+    "connect-src 'self'",
+    "object-src 'none'",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+  ].join('; ');
+}
+
+function setContentSecurityPolicy(res: express.Response, nonce: string): void {
+  res.setHeader('Content-Security-Policy', createContentSecurityPolicy(nonce));
+}
+
+function applyCspNonce(html: string, nonce: string): string {
+  return html.replace(
+    /<script(?![^>]*\bsrc=)(?![^>]*\bnonce=)/g,
+    `<script nonce="${nonce}"`,
+  );
+}
+
+function disableInlineStylesheetOnloadHandlers(html: string): string {
+  return html.replace(
+    /<link rel="stylesheet" href="([^"]+)" media="print" onload="this\.media='all'">/g,
+    '<link rel="stylesheet" href="$1">',
+  );
+}
+
+function applyCspCompatibility(html: string, nonce: string): string {
+  return disableInlineStylesheetOnloadHandlers(applyCspNonce(html, nonce));
+}
+
+function getCachedHtml(key: string): SsrCacheEntry | undefined {
+  const entry = ssrCache.get(key);
+  if (!entry) return undefined;
+  if (entry.expires <= Date.now()) {
+    ssrCache.delete(key);
+    return undefined;
+  }
+  return entry;
+}
+
+function setCachedHtml(key: string, html: string, nonce: string): void {
+  enforceCacheLimit();
+  ssrCache.set(key, { html, nonce, expires: Date.now() + SSR_CACHE_TTL_MS });
+}
+
+/**
  * Handle all other requests by rendering the Angular application.
  */
 app.get('**', (req, res) => {
   const { protocol, originalUrl, baseUrl, headers } = req;
+  const cacheable = isCacheableRequest(req);
+  const cacheKey = originalUrl;
+
+  if (cacheable) {
+    const cachedEntry = getCachedHtml(cacheKey);
+    if (cachedEntry !== undefined) {
+      setContentSecurityPolicy(res, cachedEntry.nonce);
+      res.setHeader('X-SSR-Cache', 'HIT');
+      res.setHeader(
+        'Cache-Control',
+        `public, max-age=${SSR_CACHE_TTL_MS / 1000}`,
+      );
+      res.send(cachedEntry.html);
+      return;
+    }
+  }
+
+  const nonce = createCspNonce();
 
   commonEngine
     .render({
@@ -72,9 +201,27 @@ app.get('**', (req, res) => {
       documentFilePath: indexHtml,
       url: `${protocol}://${headers.host}${originalUrl}`,
       publicPath: browserDistFolder,
-      providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
+      providers: [
+        { provide: APP_BASE_HREF, useValue: baseUrl },
+        { provide: CSP_NONCE, useValue: nonce },
+      ],
     })
-    .then((html) => res.send(html))
+    .then((html) => {
+      const cspCompatibleHtml = applyCspCompatibility(html, nonce);
+      setContentSecurityPolicy(res, nonce);
+      if (cacheable) {
+        setCachedHtml(cacheKey, cspCompatibleHtml, nonce);
+        res.setHeader('X-SSR-Cache', 'MISS');
+        res.setHeader(
+          'Cache-Control',
+          `public, max-age=${SSR_CACHE_TTL_MS / 1000}`,
+        );
+      } else {
+        res.setHeader('X-SSR-Cache', 'BYPASS');
+        res.setHeader('Cache-Control', 'no-store');
+      }
+      res.send(cspCompatibleHtml);
+    })
     .catch((err) => {
       console.error('SSR render error:', err);
       res.status(500).send('Internal Server Error');

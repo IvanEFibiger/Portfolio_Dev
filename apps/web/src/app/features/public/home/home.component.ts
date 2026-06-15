@@ -21,19 +21,18 @@ import { environment } from '../../../../environments/environment';
     <section id="hero">
       <div class="hero-container">
         <div class="hero-left">
-          <div class="hero-greeting">Full Stack · Arquitectura · <em>Seguridad</em></div>
-          <h1 class="hero-name">Ivan<br /><span>Fibiger</span></h1>
+          <div class="hero-greeting">Desarrollo Full Stack · Arquitectura · <em>Seguridad</em></div>
+          <h1 class="hero-name">Ivan <span>Fibiger</span></h1>
           <p class="hero-headline">
-            Diseño y desarrollo sistemas completos para resolver problemas reales. Trabajo desde el
-            análisis del problema hasta el backend, frontend, base de datos, despliegue, seguridad,
-            documentación y puesta en marcha.
+            Construyo sistemas completos, desde el análisis del problema hasta la puesta en marcha.
           </p>
           <p class="hero-headline">
-            Me enfoco en sistemas claros, mantenibles y seguros, pensados para funcionar en
-            escenarios reales.
+            Trabajo con backend, frontend, bases de datos, despliegue, documentación y seguridad,
+            buscando soluciones claras, mantenibles y preparadas para uso real.
           </p>
           <p class="hero-sub">
-            Construyo software pensando en el problema, no solo en la pantalla.
+            Mi enfoque no está solo en construir pantallas, sino en entender el problema, diseñar una
+            buena solución y llevarla a producción.
           </p>
           <div class="hero-actions">
             <a class="btn btn-primary" routerLink="/proyectos">
@@ -114,8 +113,8 @@ import { environment } from '../../../../environments/environment';
               </li>
             </ol>
             <p class="sumario-note">
-              Sistemas en producción, decisiones documentadas y experimentos con sus fracasos
-              incluidos. Sin métricas infladas.
+              Sistemas en producción, decisiones técnicas explicadas y experimentos documentados
+              con lo que funcionó, lo que falló y lo que aprendí.
             </p>
           </aside>
         </div>
@@ -131,9 +130,19 @@ import { environment } from '../../../../environments/environment';
           <div class="eyebrow">Ámbito técnico</div>
           <h2 class="section-title">Qué construyo</h2>
           <p class="section-desc">
-            El código importa, pero también importan los datos, los permisos, los logs, la seguridad
-            y lo que pasa cuando algo falla.
+            Construyo sistemas completos donde no alcanza con que la pantalla funcione. También
+            importan los datos, los permisos, la trazabilidad, la seguridad, la integración con otros
+            sistemas y el comportamiento ante errores.
           </p>
+          <p class="section-desc">
+            Trabajo principalmente sobre aplicaciones web, APIs backend, paneles de administración e
+            integraciones entre sistemas. Me interesa que cada proyecto tenga una base técnica clara:
+            arquitectura entendible, reglas de negocio bien modeladas, validaciones, auditoría,
+            documentación y despliegue reproducible.
+          </p>
+        </div>
+        <div class="section-heading">
+          <h2 class="section-title">Áreas de trabajo</h2>
         </div>
         <div class="capabilities-grid">
           <div class="capability-card">
@@ -143,9 +152,10 @@ import { environment } from '../../../../environments/environment';
                 <path d="M1 7h14M5 3v10" />
               </svg>
             </div>
-            <div class="capability-name">Sistemas municipales</div>
+            <div class="capability-name">Sistemas de gestión</div>
             <div class="capability-desc">
-              Plataformas para gestión, identidad ciudadana e integración de sistemas legacy.
+              Plataformas para organizar procesos internos, usuarios, roles, permisos, formularios,
+              expedientes, turnos y flujos administrativos.
             </div>
           </div>
           <div class="capability-card">
@@ -154,9 +164,11 @@ import { environment } from '../../../../environments/environment';
                 <path d="M8 1v14M1 8h14M3.5 3.5l9 9M12.5 3.5l-9 9" />
               </svg>
             </div>
-            <div class="capability-name">APIs backend</div>
+            <div class="capability-name">Backend y APIs</div>
             <div class="capability-desc">
-              APIs REST con NestJS, autenticación, autorización granular y auditoría.
+              Servicios backend para exponer datos, aplicar reglas de negocio, gestionar
+              autenticación, controlar permisos, validar información y registrar operaciones
+              importantes.
             </div>
           </div>
           <div class="capability-card">
@@ -168,20 +180,8 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="capability-name">Aplicaciones web</div>
             <div class="capability-desc">
-              Frontend Angular moderno: componentes standalone, signals, lazy loading.
-            </div>
-          </div>
-          <div class="capability-card">
-            <div class="capability-icon">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="1" y="4" width="14" height="9" rx="1" />
-                <path d="M4 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" />
-                <path d="M1 9h14" />
-              </svg>
-            </div>
-            <div class="capability-name">Paneles admin</div>
-            <div class="capability-desc">
-              Dashboards de gestión con CRUDs, roles, permisos y flujos de trabajo.
+              Interfaces para operación diaria: paneles, formularios, dashboards, búsquedas, filtros,
+              estados y flujos de trabajo.
             </div>
           </div>
           <div class="capability-card">
@@ -193,18 +193,8 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="capability-name">Integraciones</div>
             <div class="capability-desc">
-              Gateways entre sistemas: pagos, QR, recaudación, webhooks e idempotencia.
-            </div>
-          </div>
-          <div class="capability-card">
-            <div class="capability-icon">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M4 12L2 8l2-4M12 4l2 4-2 4M9 3l-2 10" />
-              </svg>
-            </div>
-            <div class="capability-name">Automatización con IA</div>
-            <div class="capability-desc">
-              RAG con modelos locales (Ollama + pgvector) para contextos controlados.
+              Conexión entre sistemas, servicios externos, procesos automáticos, intercambio de datos
+              y adaptación de información proveniente de plataformas existentes.
             </div>
           </div>
           <div class="capability-card">
@@ -215,7 +205,20 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="capability-name">Seguridad aplicada</div>
             <div class="capability-desc">
-              JWT, scopes, hardening de APIs, validaciones y seguridad desde el diseño.
+              Diseño de permisos, control de acceso, validación de entradas, trazabilidad, manejo
+              seguro de errores y reducción de superficie de ataque.
+            </div>
+          </div>
+          <div class="capability-card">
+            <div class="capability-icon">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 12L2 8l2-4M12 4l2 4-2 4M9 3l-2 10" />
+              </svg>
+            </div>
+            <div class="capability-name">Automatización e IA</div>
+            <div class="capability-desc">
+              Experimentos controlados para automatizar procesos, asistir tareas técnicas, consultar
+              documentación y trabajar con información en contextos acotados.
             </div>
           </div>
           <div class="capability-card">
@@ -227,7 +230,8 @@ import { environment } from '../../../../environments/environment';
             </div>
             <div class="capability-name">Documentación técnica</div>
             <div class="capability-desc">
-              Arquitectura, decisiones, ADRs, contratos de API y guías de despliegue.
+              Arquitectura, decisiones técnicas, contratos de API, guías de despliegue, bitácoras de
+              implementación y documentación de mantenimiento.
             </div>
           </div>
         </div>
@@ -242,49 +246,60 @@ import { environment } from '../../../../environments/environment';
         <div class="section-heading">
           <div class="eyebrow">Metodología</div>
           <h2 class="section-title">Cómo pienso los sistemas</h2>
-          <p class="section-desc">Un sistema no termina cuando compila.</p>
         </div>
-        <div class="process-flow">
-          <div class="process-step">
-            <div class="process-node active">Problema</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Requerimientos</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Arquitectura</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Desarrollo</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Seguridad</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Testing</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Deploy</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Documentación</div>
-            <div class="process-arrow">→</div>
-          </div>
-          <div class="process-step">
-            <div class="process-node">Mantenimiento</div>
-          </div>
+        <div class="method-intro">
+          <p>
+            Un sistema no termina cuando compila. Lo importante aparece después:
+            cuando cambia una integración, cuando hay que auditar qué se tocó,
+            cuando algo falla o cuando lo mantiene alguien que no lo escribió.
+          </p>
+          <p>
+            No diseño para la demostración. Diseño para producción: para que el
+            sistema se pueda mantener, desplegar, auditar y mejorar sin depender
+            de que yo esté al lado.
+          </p>
         </div>
-        <div class="process-quote">
-          No me interesa solo que funcione en local.<br />
-          Me interesa que se pueda mantener, auditar, desplegar y mejorar.
-        </div>
+        <ol class="method-principles">
+          <li class="principle">
+            <h3 class="principle-title">Diseño asumiendo que algo va a fallar</h3>
+            <p class="principle-body">
+              Lo externo cambia, se cae o responde distinto a lo esperado. Por
+              eso prefiero estados explícitos, errores manejados con claridad y
+              procesos que puedan retomarse sin romper datos.
+            </p>
+          </li>
+          <li class="principle">
+            <h3 class="principle-title">Prefiero lo explícito antes que lo ingenioso</h3>
+            <p class="principle-body">
+              El código ingenioso suele depender demasiado de quien lo escribió.
+              Prefiero soluciones claras, trazables y fáciles de revisar.
+            </p>
+          </li>
+          <li class="principle">
+            <h3 class="principle-title">Documento lo que el código no puede contar solo</h3>
+            <p class="principle-body">
+              El código muestra qué hace. La documentación explica por qué se
+              decidió así, qué alternativas se descartaron y qué hay que tener en
+              cuenta para mantenerlo.
+            </p>
+          </li>
+          <li class="principle">
+            <h3 class="principle-title">Pruebo donde duele</h3>
+            <p class="principle-body">
+              No me interesa inflar cobertura por cumplir. Prefiero asegurar las
+              reglas críticas, los permisos, los casos borde y los flujos donde
+              un error cuesta caro.
+            </p>
+          </li>
+          <li class="principle">
+            <h3 class="principle-title">Pienso en quien mantiene</h3>
+            <p class="principle-body">
+              Logs útiles, trazabilidad, errores entendibles, configuración clara
+              y despliegue reproducible. El sistema tiene que poder entenderse sin
+              hacer arqueología.
+            </p>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -441,7 +456,7 @@ export class HomeComponent implements OnInit {
       name: 'Ivan Fibiger',
       url: environment.siteUrl,
       jobTitle: 'Full Stack Developer & System Architect',
-      sameAs: ['https://github.com/ivanfibiger', 'https://www.linkedin.com/in/ivan-fibiger/'],
+      sameAs: ['https://github.com/IvanEFibiger', 'https://www.linkedin.com/in/ivan-fibiger/'],
     });
   }
 }

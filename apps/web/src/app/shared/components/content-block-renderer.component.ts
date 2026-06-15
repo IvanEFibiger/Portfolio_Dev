@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ArticleContentBlock } from '../models/content-block.model';
 
@@ -35,7 +36,16 @@ import { ArticleContentBlock } from '../models/content-block.model';
             </aside>
           }
           @case ('image') {
-            <img [src]="block.url" [alt]="block.alt" />
+            <figure class="content-image-frame">
+              <img
+                [ngSrc]="block.url"
+                [alt]="block.alt"
+                fill
+                loading="lazy"
+                decoding="async"
+                sizes="(max-width: 800px) 100vw, 800px"
+              />
+            </figure>
           }
           @case ('list') {
             @if (block.ordered) {
@@ -56,6 +66,22 @@ import { ArticleContentBlock } from '../models/content-block.model';
       }
     </div>
   `,
+  imports: [NgOptimizedImage],
+  styles: [
+    `
+      .content-image-frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border-radius: var(--r-md);
+      }
+
+      .content-image-frame img {
+        object-fit: cover;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentBlockRendererComponent {

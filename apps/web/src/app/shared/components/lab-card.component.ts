@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { LabItem } from '../models/lab.model';
 
 @Component({
   selector: 'app-lab-card',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   template: `
-    <div class="lab-card">
+    <a class="lab-card" [routerLink]="['/laboratorio', lab().slug]">
       <div class="lab-header">
         <span
           class="lab-status"
@@ -27,8 +28,16 @@ import { LabItem } from '../models/lab.model';
         }
       </div>
       <div class="lab-learning">{{ lab().learning }}</div>
-    </div>
+    </a>
   `,
+  styles: [
+    `
+      .lab-card {
+        color: inherit;
+        text-decoration: none;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LabCardComponent {

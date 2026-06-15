@@ -13,6 +13,7 @@ export class LabMapper {
       orm.stack ?? [],
       orm.learning,
       orm.sortOrder,
+      orm.published,
       orm.createdAt,
       orm.updatedAt,
     );
@@ -29,6 +30,7 @@ export class LabMapper {
       stack: domain.stack,
       learning: domain.learning,
       sortOrder: domain.sortOrder,
+      published: domain.published,
     };
   }
 }

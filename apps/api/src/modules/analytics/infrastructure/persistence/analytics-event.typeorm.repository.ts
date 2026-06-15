@@ -63,6 +63,16 @@ export class AnalyticsEventTypeOrmRepository implements AnalyticsEventRepository
     };
   }
 
+  async deleteOlderThan(date: Date): Promise<number> {
+    const result = await this.repo
+      .createQueryBuilder()
+      .delete()
+      .where('created_at < :date', { date })
+      .execute();
+
+    return result.affected ?? 0;
+  }
+
   private buildCreatedAtFilter(filters: AnalyticsSummaryFilters) {
     if (filters.from && filters.to) return Between(filters.from, filters.to);
     if (filters.from) return MoreThanOrEqual(filters.from);

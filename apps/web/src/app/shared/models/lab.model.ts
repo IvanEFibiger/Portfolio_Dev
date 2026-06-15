@@ -10,6 +10,7 @@ export interface LabItem {
   stack: string[];
   learning: string;
   sortOrder: number;
+  published: boolean;
 }
 
 export interface LabFormValue {
@@ -21,4 +22,5 @@ export interface LabFormValue {
   stack: string;
   learning: string;
   sortOrder: number;
+  published: boolean;
 }

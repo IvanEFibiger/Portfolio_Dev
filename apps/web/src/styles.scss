@@ -1,3 +1,17 @@
+@import '@fontsource/outfit/400.css';
+@import '@fontsource/outfit/500.css';
+@import '@fontsource/outfit/600.css';
+@import '@fontsource/outfit/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/400-italic.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/400-italic.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import '@fontsource/ibm-plex-mono/700.css';
 /* ==========================================================================
    Portfolio Iván Fibiger — Design System v3.1 «Editorial fósforo»
    Negro cálido, acento fósforo, grotesk dura. Estructura editorial,
@@ -800,63 +814,58 @@ main.public-main { padding-top: var(--nav-h); }
    PROCESS FLOW — Cómo pienso los sistemas
    ═══════════════════════════════════════════════ */
 
-.process-flow {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-wrap: wrap;
-  row-gap: 12px;
-  margin-bottom: 28px;
+/* ── MÉTODO — intro + principios numerados, sin cajitas ── */
+.method-intro {
+  max-width: 640px;
+  margin-bottom: clamp(34px, 4vw, 52px);
+  display: grid;
+  gap: 16px;
 }
-
-.process-step {
-  display: flex;
-  align-items: center;
-  gap: 0;
-}
-
-/* Cadena tipográfica, sin cajitas */
-.process-node {
-  background: none;
-  border: none;
-  border-bottom: 1px solid transparent;
-  border-radius: 0;
-  padding: 2px 0;
-  font-family: var(--font-mono);
-  font-size: 13.5px;
-  letter-spacing: 0.04em;
+.method-intro p {
+  font-size: var(--fs-md);
   color: var(--text-sec);
-  white-space: nowrap;
-  transition: color 0.2s, border-color 0.2s;
-  cursor: default;
+  line-height: 1.75;
 }
-.process-node:hover {
+
+.method-principles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: principio;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(28px, 4vw, 56px);
+  row-gap: clamp(26px, 3vw, 38px);
+}
+
+.principle {
+  counter-increment: principio;
+  padding-top: 18px;
+  border-top: 1px solid var(--border2);
+}
+.principle::before {
+  content: counter(principio, decimal-leading-zero);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.principle-title {
+  font-size: var(--fs-lg);
+  font-weight: 600;
   color: var(--text);
-  border-bottom-color: var(--border2);
-}
-.process-node.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin-bottom: 8px;
 }
 
-.process-arrow {
-  color: var(--accent);
-  font-size: 13.5px;
-  padding: 0 10px;
-  font-family: var(--font-mono);
-}
-
-.process-quote {
-  font-family: var(--font-mono);
+.principle-body {
   font-size: var(--fs-sm);
-  color: var(--text-muted);
-  border-left: 2px solid var(--accent-warm);
-  padding: 12px 20px;
-  background: var(--accent-warm-dim);
-  border-radius: 0 var(--r-md) var(--r-md) 0;
-  font-style: italic;
-  max-width: 520px;
-  line-height: 1.65;
+  color: var(--text-sec);
+  line-height: 1.7;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1387,13 +1396,31 @@ main.public-main { padding-top: var(--nav-h); }
 .about-work-method {
   margin-bottom: 24px;
 }
+/* Columna de lectura: ancho de línea acotado para textos largos */
+.about-content {
+  max-width: 68ch;
+}
+
+.about-intro {
+  font-size: var(--fs-md);
+  color: var(--text-sec);
+  line-height: 1.8;
+  margin-bottom: 18px;
+  text-wrap: pretty;
+}
+
 .about-work-method-title {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
+  margin-top: 44px;
   margin-bottom: 14px;
+}
+/* El primer subtítulo de la columna no necesita el aire superior extra */
+.about-grid > div > .about-work-method-title:first-child {
+  margin-top: 0;
 }
 
 .about-principles {
@@ -1422,6 +1449,9 @@ main.public-main { padding-top: var(--nav-h); }
   display: flex;
   flex-direction: column;
   gap: 14px;
+  position: sticky;
+  top: calc(var(--nav-h) + 28px);
+  align-self: start;
 }
 
 .about-block {
@@ -1549,6 +1579,10 @@ footer.site-footer {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 32px;
   margin-bottom: 28px;
+}
+/* Navegación en la columna derecha (donde estaba el stack) */
+.footer-nav-col {
+  grid-column: 3;
 }
 
 .footer-brand-name {
@@ -3231,7 +3265,9 @@ footer.site-footer {
   .nav-hamburger { display: block; padding: 10px; margin-right: -10px; }
 
   .about-grid { grid-template-columns: 1fr; gap: 36px; }
+  .about-sidebar { position: static; top: auto; }
   .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+  .footer-nav-col { grid-column: auto; }
   .contact-layout { grid-template-columns: 1fr; }
   .capabilities-grid { grid-template-columns: repeat(2, 1fr); }
   .lab-grid { grid-template-columns: repeat(2, 1fr); }
@@ -3254,8 +3290,7 @@ footer.site-footer {
   .capabilities-grid { grid-template-columns: 1fr; gap: 4px; }
   .capability-card { padding-top: 14px; }
   .lab-grid { grid-template-columns: 1fr; }
-  .process-flow { row-gap: 8px; }
-  .process-arrow { padding: 0 7px; }
+  .method-principles { grid-template-columns: 1fr; row-gap: 26px; }
   .article-row { flex-direction: column; gap: 10px; }
   .article-meta { flex-direction: row; flex-wrap: wrap; align-items: center; min-width: auto; }
   .article-arrow { display: none; }

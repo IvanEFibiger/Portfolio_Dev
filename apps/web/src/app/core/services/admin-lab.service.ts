@@ -38,6 +38,7 @@ export class AdminLabService {
         .filter(Boolean),
       learning: value.learning,
       sortOrder: value.sortOrder,
+      published: value.published,
     };
 
     if (environment.useMocks) {

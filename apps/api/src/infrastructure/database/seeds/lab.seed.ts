@@ -39,6 +39,7 @@ async function seed() {
       learning:
         'El valor del RAG depende mas de la calidad del corpus y la evaluacion que del modelo elegido.',
       sort_order: 1,
+      published: true,
     },
     {
       lab_number: 'LAB-002',
@@ -50,6 +51,7 @@ async function seed() {
       learning:
         'Los scopes son utiles si representan acciones reales y se auditan desde el backend.',
       sort_order: 2,
+      published: true,
     },
     {
       lab_number: 'LAB-003',
@@ -62,6 +64,7 @@ async function seed() {
       learning:
         'Un deploy simple y repetible suele ser mejor que una arquitectura grande sin operacion clara.',
       sort_order: 3,
+      published: true,
     },
     {
       lab_number: 'LAB-004',
@@ -74,6 +77,7 @@ async function seed() {
       learning:
         'La seguridad basica empieza en defaults estrictos y contratos de entrada bien definidos.',
       sort_order: 4,
+      published: true,
     },
     {
       lab_number: 'LAB-005',
@@ -86,15 +90,16 @@ async function seed() {
       learning:
         'Mirar la red ayuda a detectar problemas que no aparecen leyendo solo logs de aplicacion.',
       sort_order: 5,
+      published: true,
     },
   ];
 
   for (const lab of labs) {
     await dataSource.query(
       `INSERT INTO lab_items (
-        id, lab_number, title, slug, description, status, stack, learning, sort_order, created_at, updated_at
+        id, lab_number, title, slug, description, status, stack, learning, sort_order, published, created_at, updated_at
       ) VALUES (
-        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW()
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW()
       )`,
       [
         lab.lab_number,
@@ -105,6 +110,7 @@ async function seed() {
         JSON.stringify(lab.stack),
         lab.learning,
         lab.sort_order,
+        lab.published,
       ],
     );
     console.log(`Lab seeded: ${lab.title}`);

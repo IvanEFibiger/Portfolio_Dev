@@ -60,6 +60,13 @@ import { slugify } from '../../../shared/utils/slug.util';
           </select>
         </div>
         <div class="form-field">
+          <label class="form-label" for="lf-published">Visibilidad</label>
+          <label class="form-checkbox">
+            <input id="lf-published" type="checkbox" formControlName="published" />
+            Visible en el sitio público
+          </label>
+        </div>
+        <div class="form-field">
           <label class="form-label" for="lf-stack">Stack</label>
           <input
             id="lf-stack"
@@ -110,6 +117,7 @@ export class LabFormComponent implements OnInit {
     stack: [''],
     learning: ['', Validators.required],
     sortOrder: [0],
+    published: [false],
   });
 
   ngOnInit(): void {
@@ -131,6 +139,7 @@ export class LabFormComponent implements OnInit {
           stack: lab.stack.join(', '),
           learning: lab.learning,
           sortOrder: lab.sortOrder,
+          published: lab.published,
         });
       },
       error: () => this.error.set('No se pudo cargar el lab.'),

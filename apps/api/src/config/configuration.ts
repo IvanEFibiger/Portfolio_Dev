@@ -28,6 +28,10 @@ export default () => ({
     limit: parseInt(process.env.THROTTLE_LIMIT ?? '10', 10),
   },
 
+  analytics: {
+    retentionDays: parseInt(process.env.ANALYTICS_RETENTION_DAYS ?? '365', 10),
+  },
+
   swagger: {
     enabled: process.env.SWAGGER_ENABLED === 'true',
   },

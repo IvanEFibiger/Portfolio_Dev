@@ -40,6 +40,10 @@ export class LabOrmEntity {
   @Column({ name: 'sort_order', type: 'int', default: 0 })
   sortOrder!: number;
 
+  @Index()
+  @Column({ default: false })
+  published!: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 

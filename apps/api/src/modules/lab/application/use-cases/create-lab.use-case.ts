@@ -24,6 +24,7 @@ export class CreateLabUseCase {
       stack: dto.stack,
       learning: dto.learning,
       sortOrder: dto.sortOrder ?? 0,
+      published: dto.published ?? false,
     });
   }
 

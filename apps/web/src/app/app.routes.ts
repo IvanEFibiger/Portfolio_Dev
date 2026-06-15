@@ -102,6 +102,11 @@ export const routes: Routes = [
         title: 'Laboratorio - Ivan Fibiger',
       },
       {
+        path: 'laboratorio/:slug',
+        loadComponent: () =>
+          import('./features/public/lab/lab-detail.component').then((m) => m.LabDetailComponent),
+      },
+      {
         path: 'contacto',
         loadComponent: () =>
           import('./features/public/contact/contact.component').then((m) => m.ContactComponent),

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { LabItem } from '../../domain/entities/lab.entity';
 import { CreateLabData, LabRepositoryPort } from '../../domain/ports/lab.repository.port';
 import { LabMapper } from './lab.mapper';
@@ -25,7 +25,7 @@ export class LabTypeOrmRepository implements LabRepositoryPort {
 
   async findAllPublished(): Promise<LabItem[]> {
     const entities = await this.repo.find({
-      where: { status: Not('Archivado') },
+      where: { published: true },
       order: { sortOrder: 'ASC' },
     });
     return entities.map(LabMapper.toDomain);

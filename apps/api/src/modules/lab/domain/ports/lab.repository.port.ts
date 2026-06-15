@@ -9,6 +9,7 @@ export interface CreateLabData {
   stack: string[];
   learning: string;
   sortOrder: number;
+  published?: boolean;
 }
 
 export interface LabRepositoryPort {

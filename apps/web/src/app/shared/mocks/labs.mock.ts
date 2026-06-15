@@ -13,6 +13,7 @@ export const MOCK_LABS: LabItem[] = [
     learning:
       'El valor del RAG depende mas de la calidad del corpus y la evaluacion que del modelo elegido.',
     sortOrder: 1,
+    published: true,
   },
   {
     id: 'lab-jwt-scopes',
@@ -24,6 +25,7 @@ export const MOCK_LABS: LabItem[] = [
     stack: ['JWT', 'NestJS', 'Guards', 'Scopes'],
     learning: 'Los scopes son utiles si representan acciones reales y se auditan desde el backend.',
     sortOrder: 2,
+    published: true,
   },
   {
     id: 'lab-compose-staging',
@@ -36,6 +38,7 @@ export const MOCK_LABS: LabItem[] = [
     learning:
       'Un deploy simple y repetible suele ser mejor que una arquitectura grande sin operacion clara.',
     sortOrder: 3,
+    published: true,
   },
   {
     id: 'lab-hardening-api',
@@ -49,6 +52,7 @@ export const MOCK_LABS: LabItem[] = [
     learning:
       'La seguridad basica empieza en defaults estrictos y contratos de entrada bien definidos.',
     sortOrder: 4,
+    published: true,
   },
   {
     id: 'lab-wireshark-dev',
@@ -61,5 +65,6 @@ export const MOCK_LABS: LabItem[] = [
     learning:
       'Mirar la red ayuda a detectar problemas que no aparecen leyendo solo logs de aplicacion.',
     sortOrder: 5,
+    published: true,
   },
 ];

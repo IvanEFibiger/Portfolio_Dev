@@ -1,39 +1,62 @@
-# Portfolio Personal — Iván Fibiger
+# Portfolio Personal - Ivan Fibiger
 
-Plataforma técnica personal que funciona como portfolio profesional, blog técnico administrable, gestor de proyectos/casos de estudio, laboratorio técnico y muestra viva de arquitectura, seguridad y buenas prácticas.
+Plataforma tecnica personal full-stack: portfolio profesional, bitacora tecnica administrable, gestor de proyectos/casos de estudio, laboratorio tecnico y muestra viva de arquitectura, seguridad y buenas practicas.
 
 > Software, seguridad y arquitectura para construir soluciones que funcionen fuera del tutorial.
 
 ---
 
-## Objetivo
+## Estado actual
 
-No es una landing page genérica de desarrollador. Es una plataforma que refleja capacidad técnica real: análisis, arquitectura backend/frontend, seguridad aplicada, desarrollo full stack, documentación y pensamiento de producto.
+**Aplicacion full-stack funcional con SSR.**
+
+El proyecto ya cuenta con backend NestJS, frontend Angular, panel admin, contenido publico, laboratorio, SEO dinamico, sitemap/robots, SSR runtime, Docker Compose y hardening base. No es un esqueleto: se puede levantar la app completa, administrar contenido y renderizar rutas publicas desde el servidor.
+
+### Implementado
+
+- Backend NestJS modular con PostgreSQL, TypeORM, migraciones, seeds y Swagger en desarrollo.
+- Frontend Angular con rutas publicas, layout, shell admin, login, guard e interceptor JWT.
+- CRUD admin de articulos, proyectos y laboratorio; gestion de mensajes, newsletter, settings y analytics.
+- Contenido publico: home, sobre mi, proyectos, bitacora, laboratorio, contacto y "como esta construido".
+- Editor de contenido por bloques para articulos y renderer compartido.
+- SEO dinamico con meta tags, Open Graph, Twitter Cards, JSON-LD, `sitemap.xml` y `robots.txt`.
+- SSR Angular runtime con proxy interno `/api` y Dockerfile web basado en Node.
+- Seguridad base: Helmet con CSP, CORS, rate limiting, validacion global, JWT con expiracion validada en frontend.
+- UX polish: dark/light theme, estados loading/empty/error, busquedas, 404 dedicada y microinteracciones.
+- Documentacion de despliegue VPS + NGINX + SSL.
 
 ---
 
-## Stack tecnológico
+## Objetivo
 
-| Capa | Tecnología |
+No es una landing page generica de desarrollador. Es una plataforma que refleja capacidad tecnica real: analisis, arquitectura backend/frontend, seguridad aplicada, desarrollo full stack, documentacion y pensamiento de producto.
+
+---
+
+## Stack tecnologico
+
+| Capa | Tecnologia |
 |---|---|
-| Frontend | Angular (standalone components, signals, nuevo control flow) |
+| Frontend | Angular (standalone components, signals, nuevo control flow, SSR) |
 | Backend | NestJS (modular, TypeScript) |
 | Base de datos | PostgreSQL |
-| ORM | TypeORM (migraciones, sin synchronize en producción) |
-| Autenticación | JWT (auth propia, sin Keycloak) |
-| Validación | class-validator + DTOs |
-| Infraestructura | Docker Compose |
-| Documentación | Markdown en `/docs` |
+| ORM | TypeORM (migraciones, sin `synchronize` en produccion) |
+| Autenticacion | JWT (auth propia, sin Keycloak) |
+| Validacion | class-validator + DTOs |
+| Infraestructura | Docker Compose, NGINX para VPS |
+| Observabilidad | nestjs-pino + analytics simple |
+| Documentacion | Markdown en `/docs` |
 
 ---
 
 ## Arquitectura
 
-**Monolito modular + hexagonal pragmática + Clean Code.**
+**Monolito modular + hexagonal pragmatica + Clean Code.**
 
-- Módulos con lógica de negocio (articles, projects): hexagonal pragmática con separación de dominio, aplicación, infraestructura e interfaces.
-- Módulos simples (health, config): estructura directa sin capas innecesarias.
+- Modulos con logica de negocio (articles, projects, lab, contact, newsletter, analytics): separacion pragmatica de dominio, aplicacion, infraestructura e interfaces.
+- Modulos simples (health, config, auth, sitemap): estructura directa sin capas innecesarias.
 - Monorepo simple sin herramientas de monorepo externas.
+- Frontend Angular con rutas lazy, shells separados para zona publica/admin, servicios core y componentes compartidos.
 
 Ver: [docs/architecture.md](docs/architecture.md) | [ADR 0001](docs/decisions/0001-architecture-style.md)
 
@@ -41,74 +64,73 @@ Ver: [docs/architecture.md](docs/architecture.md) | [ADR 0001](docs/decisions/00
 
 ## Estructura del proyecto
 
-```
+```text
 portfolio-ivan/
-├── apps/
-│   ├── api/                    # Backend NestJS
-│   │   ├── src/
-│   │   │   ├── config/         # Configuración y validación de entorno
-│   │   │   ├── common/         # Decorators, filters, guards, interceptors, pipes
-│   │   │   ├── modules/        # Módulos de negocio
-│   │   │   │   ├── articles/   # Hexagonal pragmática
-│   │   │   │   ├── projects/   # Hexagonal pragmática
-│   │   │   │   ├── contact/    # Hexagonal pragmática
-│   │   │   │   ├── newsletter/ # Hexagonal pragmática
-│   │   │   │   ├── analytics/  # Hexagonal pragmática
-│   │   │   │   ├── auth/       # Estructura simple
-│   │   │   │   ├── admin/      # Estructura simple
-│   │   │   │   └── health/     # Estructura simple
-│   │   │   └── infrastructure/ # Database, mail, storage, logger
-│   │   └── test/               # Unit, integration, e2e
-│   └── web/                    # Frontend Angular
-│       └── src/app/
-│           ├── core/           # Servicios singleton, guards, interceptors
-│           ├── shared/         # Componentes y pipes reutilizables
-│           ├── layout/         # Header, footer, sidebar
-│           ├── features/
-│           │   ├── public/     # Home, about, projects, articles, lab, contact
-│           │   └── admin/      # Dashboard, CRUD, métricas
-│           ├── styles/         # Variables CSS, temas, tipografía
-│           └── config/         # Configuración de la app
-├── packages/
-│   └── shared/                 # Tipos e interfaces compartidas
-├── docs/                       # Documentación técnica
-├── docker/                     # Dockerfiles y scripts
-├── docker-compose.yml
-├── .env.example
-├── AGENT.md
-└── README.md
+|-- apps/
+|   |-- api/                    # Backend NestJS
+|   |   |-- src/
+|   |   |   |-- config/         # Configuracion y validacion de entorno
+|   |   |   |-- common/         # Guards, filters, interceptors, cache
+|   |   |   |-- modules/        # Modulos de negocio y soporte
+|   |   |   |   |-- articles/   # Bitacora tecnica administrable
+|   |   |   |   |-- projects/   # Casos de estudio
+|   |   |   |   |-- lab/        # Laboratorio tecnico
+|   |   |   |   |-- contact/    # Mensajes de contacto
+|   |   |   |   |-- newsletter/ # Suscriptores
+|   |   |   |   |-- analytics/  # Page views y summary admin
+|   |   |   |   |-- sitemap/    # sitemap.xml y robots.txt
+|   |   |   |   |-- auth/       # Login admin JWT
+|   |   |   |   `-- health/     # Healthcheck
+|   |   |   `-- infrastructure/ # Database, migrations, seeds
+|   |   `-- test/               # E2E
+|   `-- web/                    # Frontend Angular + SSR
+|       |-- src/server.ts       # Express SSR + proxy /api
+|       `-- src/app/
+|           |-- core/           # Servicios, guards, interceptors, shells
+|           |-- shared/         # Componentes, modelos y utilidades
+|           `-- features/
+|               |-- public/     # Home, about, projects, blog, lab, contact
+|               `-- admin/      # Dashboard, CRUDs y metricas
+|-- packages/shared/            # Tipos compartidos
+|-- docs/                       # Documentacion tecnica
+|-- docker/nginx/               # Reverse proxy para VPS
+|-- docker-compose.yml
+|-- docker-compose.prod.yml
+|-- .env.example
+`-- README.md
 ```
 
 ---
 
 ## Secciones del sitio
 
-### Zona pública
+### Zona publica
 
-| Ruta | Sección |
+| Ruta actual | Seccion |
 |---|---|
 | `/` | Inicio |
-| `/about` | Sobre mí |
-| `/projects` | Proyectos |
-| `/projects/:slug` | Detalle de proyecto |
-| `/blog` | Bitácora técnica |
-| `/blog/:slug` | Artículo individual |
-| `/lab` | Laboratorio |
-| `/contact` | Contacto |
-| `/built-with` | Cómo está construido este portfolio |
+| `/sobre-mi` | Sobre mi |
+| `/proyectos` | Proyectos |
+| `/proyectos/:slug` | Detalle de proyecto |
+| `/bitacora` | Bitacora tecnica |
+| `/bitacora/:slug` | Articulo individual |
+| `/laboratorio` | Laboratorio |
+| `/contacto` | Contacto |
+| `/como-esta-construido` | Como esta construido este portfolio |
 
 ### Panel admin
 
-| Ruta | Sección |
+| Ruta | Seccion |
 |---|---|
 | `/admin/login` | Login |
 | `/admin/dashboard` | Dashboard |
-| `/admin/articles` | Gestión de artículos |
-| `/admin/projects` | Gestión de proyectos |
+| `/admin/articles` | Gestion de articulos |
+| `/admin/projects` | Gestion de proyectos |
+| `/admin/lab` | Gestion de laboratorio |
 | `/admin/contact-messages` | Mensajes de contacto |
 | `/admin/newsletter` | Suscriptores |
-| `/admin/analytics` | Métricas |
-| `/admin/settings` | Configuración |
+| `/admin/analytics` | Metricas |
+| `/admin/settings` | Configuracion |
 
 ---
 
@@ -117,23 +139,23 @@ portfolio-ivan/
 La app completa se levanta con un solo comando:
 
 ```bash
-docker compose up --build
+docker compose up -d --build
 ```
 
-Servicios expuestos:
+Servicios expuestos por defecto:
 
 | Servicio | URL |
 |---|---|
-| Web | `http://localhost:4200` |
-| API | `http://localhost:3000` |
-| Swagger | `http://localhost:3000/api/docs` |
-| PostgreSQL | `localhost:55432` |
+| Web SSR | `http://localhost:4650` |
+| API | `http://localhost:4651` |
+| Swagger | `http://localhost:4651/api/docs` |
+| PostgreSQL | `localhost:54650` |
 
-El contenedor `api` espera a PostgreSQL, corre migraciones, ejecuta el seed admin y luego arranca NestJS.
+El contenedor `api` espera a PostgreSQL, corre migraciones/seeds y arranca NestJS. El contenedor `web` sirve Angular SSR en Node y proxya `/api` hacia el backend interno.
 
 Credenciales admin de desarrollo:
 
-```txt
+```text
 Email: admin@portfolio.com
 Password: admin123
 ```
@@ -144,7 +166,7 @@ Para apagar:
 docker compose down
 ```
 
-Para borrar también la base local:
+Para borrar tambien la base local:
 
 ```bash
 docker compose down -v
@@ -162,44 +184,39 @@ cd apps/web && npm install
 # Levantar backend
 cd apps/api && npm run start:dev
 
-# Levantar frontend
-cd apps/web && ng serve
+# Levantar frontend dev
+cd apps/web && npm start
 
-# Correr migraciones
+# Build SSR frontend
+cd apps/web && npm run build
+
+# Correr migraciones y seeds
 cd apps/api && npm run migration:run
+cd apps/api && npm run seed:admin
+cd apps/api && npm run seed:content
 
 # Correr tests
-cd apps/api && npm run test
+cd apps/api && npm test
 cd apps/api && npm run test:e2e
-cd apps/web && ng test
+cd apps/web && npm test
 ```
 
 ---
 
-## Estado actual
+## Roadmap vigente
 
-**Fase 0 — Estructura inicial.**
+Ver [docs/roadmap.md](docs/roadmap.md) para el detalle verificado contra el codigo.
 
-- Estructura de carpetas creada.
-- Documentación base.
-- Convenciones definidas.
-- Sin implementación funcional.
-- Sin dependencias instaladas.
-- Sin código productivo.
+Pendientes principales actuales:
 
----
-
-## Próximos pasos
-
-Ver [docs/roadmap.md](docs/roadmap.md) para el detalle completo.
-
-1. **Fase 1** — Base funcional: NestJS, Angular, PostgreSQL, Docker, healthcheck, auth admin.
-2. **Fase 2** — MVP: CRUD artículos/proyectos, frontend público, contacto, newsletter, analytics.
-3. **Fase 3** — Mejoras: editor estructurado, SSR, búsqueda, SEO, hardening, testing e2e.
+1. Completar tests de integracion de repositories.
+2. Confirmacion de email en newsletter, si se decide implementarla.
+3. Refresh token, si el modelo de sesion lo requiere.
+4. Mantener y ampliar documentacion segun evolucione el producto.
 
 ---
 
-## Documentación
+## Documentacion
 
 | Documento | Contenido |
 |---|---|
@@ -209,6 +226,8 @@ Ver [docs/roadmap.md](docs/roadmap.md) para el detalle completo.
 | [security-guidelines.md](docs/security-guidelines.md) | Lineamientos de seguridad |
 | [database-model.md](docs/database-model.md) | Modelo de datos conceptual |
 | [api-contracts.md](docs/api-contracts.md) | Contratos de API previstos |
+| [DEPLOYMENT.md](docs/DEPLOYMENT.md) | Despliegue VPS + NGINX + SSL |
+| [improvement-plan.md](docs/improvement-plan.md) | Plan de mejoras profesionales |
 | [visual-identity.md](docs/visual-identity.md) | Identidad visual y personalidad |
 | [roadmap.md](docs/roadmap.md) | Roadmap por fases |
 

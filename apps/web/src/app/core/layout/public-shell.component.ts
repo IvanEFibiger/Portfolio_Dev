@@ -90,7 +90,7 @@ import { ThemeService } from '../services/theme.service';
           </div>
         </div>
 
-        <div>
+        <div class="footer-nav-col">
           <div class="footer-col-title">Navegación</div>
           <ul class="footer-links">
             @for (item of footerNavItems; track item.path) {
@@ -100,21 +100,10 @@ import { ThemeService } from '../services/theme.service';
             }
           </ul>
         </div>
-
-        <div>
-          <div class="footer-col-title">Stack del portfolio</div>
-          <ul class="footer-links">
-            <li><a href="https://angular.dev" target="_blank">Angular · Frontend</a></li>
-            <li><a href="https://nestjs.com" target="_blank">NestJS · Backend</a></li>
-            <li><a href="https://www.postgresql.org" target="_blank">PostgreSQL · DB</a></li>
-            <li><a href="https://www.docker.com" target="_blank">Docker · Infra</a></li>
-            <li><a href="https://jwt.io" target="_blank">JWT · Auth</a></li>
-          </ul>
-        </div>
       </div>
 
       <div class="footer-bottom">
-        <span class="footer-copy">© 2026 Ivan Fibiger</span>
+        <span class="footer-copy">© {{ year }} Ivan Fibiger</span>
         <span class="footer-stack">
           construido con <span>Angular</span> · <span>NestJS</span> · <span>Docker</span>
         </span>
@@ -126,6 +115,7 @@ import { ThemeService } from '../services/theme.service';
 export class PublicShellComponent {
   readonly theme = inject(ThemeService);
   readonly menuOpen = signal(false);
+  readonly year = new Date().getFullYear();
 
   readonly navItems = [
     { path: '/', label: 'Inicio' },

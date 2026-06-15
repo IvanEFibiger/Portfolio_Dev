@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import configuration from './config/configuration';
@@ -47,6 +48,8 @@ const usePrettyLogs =
       inject: [ConfigService],
       useFactory: getTypeOrmConfig,
     }),
+
+    ScheduleModule.forRoot(),
 
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],

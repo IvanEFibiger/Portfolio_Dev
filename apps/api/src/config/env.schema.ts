@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Min,
   MinLength,
   validateSync,
 } from 'class-validator';
@@ -67,6 +68,11 @@ class EnvironmentVariables {
   @IsString()
   @IsOptional()
   CACHE_REDIS_URL?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Min(1)
+  ANALYTICS_RETENTION_DAYS?: number;
 
   @IsString()
   @IsOptional()

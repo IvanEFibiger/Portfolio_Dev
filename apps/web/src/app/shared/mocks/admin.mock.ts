@@ -70,6 +70,11 @@ export const MOCK_NEWSLETTER: NewsletterSubscriber[] = [
 
 export const MOCK_ANALYTICS: AnalyticsSummary = {
   totalPageViews: 412,
+  viewsByDate: [
+    { date: '2026-04-24', views: 104 },
+    { date: '2026-04-25', views: 136 },
+    { date: '2026-04-26', views: 172 },
+  ],
   recentVisits: [
     { path: '/proyectos/mi-patagones', createdAt: '2026-04-26T10:05:00.000Z', referrer: 'direct' },
     {

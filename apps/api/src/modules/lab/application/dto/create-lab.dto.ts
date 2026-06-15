@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateLabDto {
   @ApiProperty({ example: 'LAB-001' })
@@ -42,4 +42,9 @@ export class CreateLabDto {
   @IsInt()
   @IsOptional()
   sortOrder?: number;
+
+  @ApiPropertyOptional({ example: false })
+  @IsBoolean()
+  @IsOptional()
+  published?: boolean;
 }
