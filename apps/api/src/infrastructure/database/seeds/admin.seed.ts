@@ -19,7 +19,7 @@ async function seed() {
   await dataSource.initialize();
 
   const email = process.env.ADMIN_EMAIL ?? 'admin@portfolio.com';
-  const password = process.env.ADMIN_PASSWORD ?? 'admin123';
+  const password = process.env.ADMIN_PASSWORD ?? 'dev-only-change-me';
   const displayName = process.env.ADMIN_DISPLAY_NAME ?? 'Iván Fibiger';
 
   const existing = await dataSource.query('SELECT id FROM admin_users WHERE email = $1', [email]);

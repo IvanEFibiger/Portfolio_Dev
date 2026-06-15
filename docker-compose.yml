@@ -64,7 +64,7 @@ services:
       THROTTLE_LIMIT: ${THROTTLE_LIMIT:-10}
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-true}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@portfolio.com}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-dev-only-change-me}
       ADMIN_DISPLAY_NAME: ${ADMIN_DISPLAY_NAME:-Ivan Fibiger}
     depends_on:
       postgres:
