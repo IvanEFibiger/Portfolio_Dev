@@ -8,9 +8,7 @@ export class AddLabPublished1746100000003 implements MigrationInterface {
     await queryRunner.query(
       `UPDATE "lab_items" SET "published" = true WHERE "status" <> 'Archivado'`,
     );
-    await queryRunner.query(
-      `CREATE INDEX "IDX_lab_items_published" ON "lab_items" ("published")`,
-    );
+    await queryRunner.query(`CREATE INDEX "IDX_lab_items_published" ON "lab_items" ("published")`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
