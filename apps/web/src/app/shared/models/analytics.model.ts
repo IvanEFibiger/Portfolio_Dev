@@ -1,5 +1,7 @@
 export interface AnalyticsSummary {
   totalPageViews: number;
+  uniqueVisitors: number;
+  ownerPageViews: number;
   topPages: Array<{ path: string; views: number }>;
   viewsByDate: Array<{ date: string; views: number }>;
   recentVisits: Array<{ path: string; createdAt: string; referrer?: string }>;

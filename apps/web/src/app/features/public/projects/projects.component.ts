@@ -1,5 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   catchError,
   debounceTime,
@@ -11,6 +18,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { ProjectsService } from '../../../core/services/projects.service';
+import { SeoService } from '../../../core/services/seo.service';
+import { environment } from '../../../../environments/environment';
 import { PageHeaderComponent } from '../../../shared/components/page-header.component';
 import { ProjectCardComponent } from '../../../shared/components/project-card.component';
 import {
@@ -85,8 +94,9 @@ type ProjectsVm =
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit, OnDestroy {
   private readonly projectsService = inject(ProjectsService);
+  private readonly seo = inject(SeoService);
   private readonly searchTerms = new Subject<string>();
 
   readonly searchTerm = signal('');
@@ -108,6 +118,19 @@ export class ProjectsComponent {
       ),
     ),
   );
+
+  ngOnInit(): void {
+    this.seo.updateTags({
+      title: 'Proyectos - Ivan Fibiger',
+      description:
+        'Casos de estudio reales: cada proyecto presentado por problema, restricciones, stack, estado y decisiones tecnicas.',
+      url: `${environment.siteUrl}/proyectos`,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.seo.reset();
+  }
 
   onSearch(q: string): void {
     this.searchTerm.set(q);

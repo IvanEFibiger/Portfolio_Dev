@@ -38,6 +38,9 @@ app.use(
   createProxyMiddleware({
     target: apiTarget,
     changeOrigin: true,
+    // Propaga el IP del cliente a la API (X-Forwarded-For) para el conteo de
+    // visitantes únicos. En prod nginx ya lo setea; esto cubre el caso local.
+    xfwd: true,
     pathRewrite: { '^/api': '' },
   }),
 );

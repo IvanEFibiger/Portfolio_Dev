@@ -5,6 +5,8 @@ export interface CreateAnalyticsEventData {
   eventType: AnalyticsEventType;
   referrer: string | null;
   userAgentHash: string | null;
+  visitorHash: string | null;
+  isOwner: boolean;
 }
 
 export interface AnalyticsTopPage {
@@ -19,6 +21,10 @@ export interface AnalyticsViewsByDate {
 
 export interface AnalyticsSummary {
   totalPageViews: number;
+  // Visitantes únicos que NO sos vos (distinct visitor_hash con is_owner = false).
+  uniqueVisitors: number;
+  // Page views marcados como propios del dueño del sitio.
+  ownerPageViews: number;
   topPages: AnalyticsTopPage[];
   viewsByDate: AnalyticsViewsByDate[];
 }

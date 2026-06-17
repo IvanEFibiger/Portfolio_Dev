@@ -70,6 +70,8 @@ export const MOCK_NEWSLETTER: NewsletterSubscriber[] = [
 
 export const MOCK_ANALYTICS: AnalyticsSummary = {
   totalPageViews: 412,
+  uniqueVisitors: 87,
+  ownerPageViews: 23,
   viewsByDate: [
     { date: '2026-04-24', views: 104 },
     { date: '2026-04-25', views: 136 },

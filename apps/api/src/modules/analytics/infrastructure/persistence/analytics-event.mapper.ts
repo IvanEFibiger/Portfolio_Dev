@@ -9,6 +9,8 @@ export class AnalyticsEventMapper {
       orm.eventType as AnalyticsEventType,
       orm.referrer ?? null,
       orm.userAgentHash ?? null,
+      orm.visitorHash ?? null,
+      orm.isOwner ?? false,
       orm.createdAt,
     );
   }

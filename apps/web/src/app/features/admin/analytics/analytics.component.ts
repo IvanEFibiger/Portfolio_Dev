@@ -16,9 +16,19 @@ import { AdminAnalyticsService } from '../../../core/services/admin-analytics.se
     @if (summary$ | async; as summary) {
       <section class="dash-metrics" style="margin-bottom: 22px;">
         <article class="metric-card">
+          <div class="metric-label">Visitantes únicos (sin vos)</div>
+          <div class="metric-value">{{ summary.uniqueVisitors }}</div>
+          <div class="metric-delta neutral">Distintos a vos · deduplicado por día</div>
+        </article>
+        <article class="metric-card">
           <div class="metric-label">Page views</div>
           <div class="metric-value">{{ summary.totalPageViews }}</div>
           <div class="metric-delta neutral">Total registrado</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-label">Tus visitas</div>
+          <div class="metric-value">{{ summary.ownerPageViews }}</div>
+          <div class="metric-delta neutral">Marcadas como propias</div>
         </article>
       </section>
       <section

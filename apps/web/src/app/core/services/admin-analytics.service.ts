@@ -31,6 +31,11 @@ export class AdminAnalyticsService {
     const topPage = summary.topPages[0];
 
     return [
+      {
+        label: 'Visitantes unicos',
+        value: summary.uniqueVisitors,
+        hint: 'Distintos a vos, deduplicado por dia',
+      },
       { label: 'Page views', value: summary.totalPageViews, hint: 'Total registrado' },
       { label: 'Rutas visitadas', value: summary.topPages.length, hint: 'Con trafico registrado' },
       {
@@ -49,6 +54,8 @@ export class AdminAnalyticsService {
   private normalizeSummary(summary: AnalyticsSummary): AnalyticsSummary {
     return {
       totalPageViews: summary.totalPageViews,
+      uniqueVisitors: summary.uniqueVisitors ?? 0,
+      ownerPageViews: summary.ownerPageViews ?? 0,
       topPages: summary.topPages ?? [],
       viewsByDate: summary.viewsByDate ?? [],
       recentVisits: summary.recentVisits ?? [],

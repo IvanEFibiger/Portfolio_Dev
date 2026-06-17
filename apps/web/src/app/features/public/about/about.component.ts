@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { PageHeaderComponent } from '../../../shared/components/page-header.component';
+import { SeoService } from '../../../core/services/seo.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-about',
@@ -118,4 +120,20 @@ import { PageHeaderComponent } from '../../../shared/components/page-header.comp
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AboutComponent {}
+export class AboutComponent implements OnInit, OnDestroy {
+  private readonly seo = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seo.updateTags({
+      title: 'Sobre mi - Ivan Fibiger',
+      description:
+        'Quien soy: casi quince anos de cara a la gente, sistemas publicos en produccion y un camino hacia seguridad ofensiva, datos e IA aplicada.',
+      url: `${environment.siteUrl}/sobre-mi`,
+      type: 'profile',
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.seo.reset();
+  }
+}

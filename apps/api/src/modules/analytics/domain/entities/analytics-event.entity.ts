@@ -7,6 +7,8 @@ export class AnalyticsEvent {
     public eventType: AnalyticsEventType,
     public referrer: string | null,
     public userAgentHash: string | null,
+    public visitorHash: string | null,
+    public isOwner: boolean,
     public createdAt: Date,
   ) {}
 }
