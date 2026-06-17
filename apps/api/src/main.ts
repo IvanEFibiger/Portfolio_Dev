@@ -52,7 +52,7 @@ async function bootstrap() {
   if (configService.get<boolean>('swagger.enabled')) {
     const swaggerConfig = new DocumentBuilder()
       .setTitle('Portfolio Iván Fibiger — API')
-      .setDescription('API del portfolio personal y bitácora técnica')
+      .setDescription('API del portfolio personal y bitácora del programador')
       .setVersion('0.1.0')
       .addBearerAuth()
       .build();

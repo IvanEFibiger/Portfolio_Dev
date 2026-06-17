@@ -86,7 +86,7 @@ describe('SeoService', () => {
     expect(meta.updateTag).toHaveBeenCalledWith({
       name: 'description',
       content:
-        'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora tecnica.',
+        'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora del programador.',
     });
     expect(meta.removeTag).toHaveBeenCalledWith("property='og:title'");
     expect(meta.removeTag).toHaveBeenCalledWith("name='twitter:image'");

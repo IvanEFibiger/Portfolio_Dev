@@ -1,5 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   catchError,
   debounceTime,
@@ -11,6 +18,8 @@ import {
   switchMap,
 } from 'rxjs';
 import { ArticlesService } from '../../../core/services/articles.service';
+import { SeoService } from '../../../core/services/seo.service';
+import { environment } from '../../../../environments/environment';
 import { ArticleCardComponent } from '../../../shared/components/article-card.component';
 import { PageHeaderComponent } from '../../../shared/components/page-header.component';
 import {
@@ -38,8 +47,8 @@ type ArticlesVm =
   ],
   template: `
     <app-page-header
-      eyebrow="Bitácora técnica"
-      title="Notas sobre arquitectura, backend y seguridad aplicada"
+      eyebrow="Bitácora del programador"
+      title="Notas sobre arquitectura, backend, seguridad y el oficio de programar"
       description="Contenido preparado para venir desde API y renderizar bloques estructurados, sin Markdown local."
     />
     <section class="section section--alt">
@@ -85,8 +94,9 @@ type ArticlesVm =
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticlesComponent {
+export class ArticlesComponent implements OnInit, OnDestroy {
   private readonly articlesService = inject(ArticlesService);
+  private readonly seo = inject(SeoService);
   private readonly searchTerms = new Subject<string>();
 
   readonly searchTerm = signal('');
@@ -108,6 +118,19 @@ export class ArticlesComponent {
       ),
     ),
   );
+
+  ngOnInit(): void {
+    this.seo.updateTags({
+      title: 'Bitacora del programador - Ivan Fibiger',
+      description:
+        'Bitacora del programador: notas de arquitectura, backend, seguridad y lo que deja el oficio. Analisis y decisiones de sistemas reales, no tutoriales genericos.',
+      url: `${environment.siteUrl}/bitacora`,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.seo.reset();
+  }
 
   onSearch(q: string): void {
     this.searchTerm.set(q);

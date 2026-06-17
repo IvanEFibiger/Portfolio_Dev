@@ -15,7 +15,7 @@ import { BlockEditorComponent } from '../../../shared/components/block-editor/bl
     <header class="admin-page-header row-header">
       <div>
         <div class="admin-page-title">{{ articleId() ? 'Editar artículo' : 'Crear artículo' }}</div>
-        <div class="admin-page-sub">Bitácora técnica</div>
+        <div class="admin-page-sub">Bitácora del programador</div>
       </div>
     </header>
     <form class="admin-form" [formGroup]="form" (ngSubmit)="submit()">

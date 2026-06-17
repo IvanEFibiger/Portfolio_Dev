@@ -120,7 +120,7 @@ export class PublicShellComponent {
   readonly navItems = [
     { path: '/', label: 'Inicio' },
     { path: '/proyectos', label: 'Proyectos' },
-    { path: '/bitacora', label: 'Bitácora técnica' },
+    { path: '/bitacora', label: 'Bitácora del programador' },
     { path: '/laboratorio', label: 'Laboratorio' },
     { path: '/sobre-mi', label: 'Sobre mí' },
   ];
@@ -128,7 +128,7 @@ export class PublicShellComponent {
   readonly footerNavItems = [
     { path: '/', label: 'Inicio' },
     { path: '/proyectos', label: 'Proyectos' },
-    { path: '/bitacora', label: 'Bitácora técnica' },
+    { path: '/bitacora', label: 'Bitácora del programador' },
     { path: '/laboratorio', label: 'Laboratorio' },
     { path: '/sobre-mi', label: 'Sobre mí' },
     { path: '/como-esta-construido', label: 'Cómo está construido' },

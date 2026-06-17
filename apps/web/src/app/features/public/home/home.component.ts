@@ -60,7 +60,7 @@ import { environment } from '../../../../environments/environment';
               >
                 <path d="M3 4h10M3 8h8M3 12h6" />
               </svg>
-              Bitácora técnica
+              Bitácora del programador
             </a>
             <a class="btn btn-ghost" routerLink="/sobre-mi">Cómo trabajo →</a>
           </div>
@@ -85,7 +85,7 @@ import { environment } from '../../../../environments/environment';
               </li>
               <li>
                 <a routerLink="/bitacora">
-                  <span class="sumario-label">Bitácora técnica</span>
+                  <span class="sumario-label">Bitácora del programador</span>
                   <span class="sumario-dots" aria-hidden="true"></span>
                   <span class="sumario-num">02</span>
                 </a>
@@ -334,10 +334,11 @@ import { environment } from '../../../../environments/environment';
     <section class="section section--alt">
       <div class="container">
         <div class="section-heading">
-          <div class="eyebrow">Escritura técnica</div>
-          <h2 class="section-title">Bitácora técnica</h2>
+          <div class="eyebrow">Escritura</div>
+          <h2 class="section-title">Bitácora del programador</h2>
           <p class="section-desc">
-            Análisis, decisiones y notas de sistemas reales. No tutoriales genéricos.
+            Análisis, decisiones y notas de sistemas reales, y también lo que deja el oficio. No
+            tutoriales genéricos.
           </p>
         </div>
         @if (latestArticles$ | async; as articles) {
@@ -447,7 +448,7 @@ export class HomeComponent implements OnInit {
     this.seo.updateTags({
       title: 'Ivan Fibiger - Systems & Software',
       description:
-        'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora tecnica.',
+        'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora del programador.',
     });
 
     this.seo.setJsonLd({

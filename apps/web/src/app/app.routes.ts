@@ -6,7 +6,7 @@
 //   /about            → Sobre mí
 //   /projects         → Proyectos
 //   /projects/:slug   → Detalle de proyecto
-//   /blog             → Bitácora técnica
+//   /blog             → Bitácora del programador
 //   /blog/:slug       → Artículo individual
 //   /lab              → Laboratorio
 //   /contact          → Contacto
@@ -86,7 +86,7 @@ export const routes: Routes = [
         path: 'bitacora',
         loadComponent: () =>
           import('./features/public/articles/articles.component').then((m) => m.ArticlesComponent),
-        title: 'Bitacora tecnica - Ivan Fibiger',
+        title: 'Bitacora del programador - Ivan Fibiger',
       },
       {
         path: 'bitacora/:slug',

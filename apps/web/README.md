@@ -8,7 +8,7 @@ El frontend no esta planteado como landing estatica. Funciona como plataforma pu
 
 - Home tecnica con posicionamiento profesional.
 - Casos de estudio de proyectos reales.
-- Bitacora tecnica preparada para contenido estructurado desde API.
+- Bitacora del programador preparada para contenido estructurado desde API.
 - Laboratorio tecnico.
 - Contacto profesional.
 - Panel admin inicial para articulos, proyectos, mensajes, newsletter y analytics.

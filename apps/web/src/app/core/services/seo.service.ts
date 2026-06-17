@@ -20,7 +20,7 @@ export class SeoService {
 
   private readonly defaultTitle = 'Ivan Fibiger - Systems & Software';
   private readonly defaultDescription =
-    'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora tecnica.';
+    'Portfolio tecnico de Ivan Fibiger: sistemas reales, arquitectura, seguridad aplicada, full stack y bitacora del programador.';
   private readonly defaultImage = `${environment.siteUrl}/assets/og-default.png`;
 
   updateTags(tags: SeoTags = {}): void {

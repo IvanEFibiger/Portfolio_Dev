@@ -1,6 +1,6 @@
 # Portfolio Personal - Ivan Fibiger
 
-Plataforma tecnica personal full-stack: portfolio profesional, bitacora tecnica administrable, gestor de proyectos/casos de estudio, laboratorio tecnico y muestra viva de arquitectura, seguridad y buenas practicas.
+Plataforma tecnica personal full-stack: portfolio profesional, bitacora del programador administrable, gestor de proyectos/casos de estudio, laboratorio tecnico y muestra viva de arquitectura, seguridad y buenas practicas.
 
 > Software, seguridad y arquitectura para construir soluciones que funcionen fuera del tutorial.
 
@@ -72,7 +72,7 @@ portfolio-ivan/
 |   |   |   |-- config/         # Configuracion y validacion de entorno
 |   |   |   |-- common/         # Guards, filters, interceptors, cache
 |   |   |   |-- modules/        # Modulos de negocio y soporte
-|   |   |   |   |-- articles/   # Bitacora tecnica administrable
+|   |   |   |   |-- articles/   # Bitacora del programador administrable
 |   |   |   |   |-- projects/   # Casos de estudio
 |   |   |   |   |-- lab/        # Laboratorio tecnico
 |   |   |   |   |-- contact/    # Mensajes de contacto
@@ -112,7 +112,7 @@ portfolio-ivan/
 | `/sobre-mi` | Sobre mi |
 | `/proyectos` | Proyectos |
 | `/proyectos/:slug` | Detalle de proyecto |
-| `/bitacora` | Bitacora tecnica |
+| `/bitacora` | Bitacora del programador |
 | `/bitacora/:slug` | Articulo individual |
 | `/laboratorio` | Laboratorio |
 | `/contacto` | Contacto |
