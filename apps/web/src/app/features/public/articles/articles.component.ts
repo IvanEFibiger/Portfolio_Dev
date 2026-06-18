@@ -49,7 +49,7 @@ type ArticlesVm =
     <app-page-header
       eyebrow="Bitácora del programador"
       title="Notas sobre arquitectura, backend, seguridad y el oficio de programar"
-      description="Contenido preparado para venir desde API y renderizar bloques estructurados, sin Markdown local."
+      description="Lo que aprendo construyendo sistemas reales y ejerciendo el oficio: decisiones, errores y criterios que no caben en un README."
     />
     <section class="section section--alt">
       <div class="container">
