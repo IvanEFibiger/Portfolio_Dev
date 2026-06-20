@@ -6,6 +6,7 @@ import { ArticlesService } from '../../../core/services/articles.service';
 import { SeoService } from '../../../core/services/seo.service';
 import { environment } from '../../../../environments/environment';
 import { ContentBlockRendererComponent } from '../../../shared/components/content-block-renderer.component';
+import { ArticleReactionsComponent } from '../../../shared/components/article-reactions.component';
 import { EmptyStateComponent } from '../../../shared/components/state.components';
 import { TechBadgeComponent } from '../../../shared/components/tech-badge.component';
 
@@ -17,6 +18,7 @@ import { TechBadgeComponent } from '../../../shared/components/tech-badge.compon
     DatePipe,
     RouterLink,
     ContentBlockRendererComponent,
+    ArticleReactionsComponent,
     EmptyStateComponent,
     TechBadgeComponent,
   ],
@@ -38,6 +40,7 @@ import { TechBadgeComponent } from '../../../shared/components/tech-badge.compon
           </div>
         </header>
         <app-content-block-renderer [blocks]="article.content.blocks" />
+        <app-article-reactions [slug]="article.slug" />
       </article>
     } @else {
       <app-empty-state
